@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "engram-semantic-memory/docs/**"
-      - "engram-semantic-memory/mkdocs.yml"
-      - "engram-semantic-memory/requirements-docs.txt"
-      - "engram-semantic-memory/sdk/**"
-      - "engram-semantic-memory/app/**"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - "sdk/**"
+      - "app/**"
   workflow_dispatch: {}
 
 permissions:
@@ -31,14 +31,13 @@ jobs:
       - name: Install docs deps
         run: |
           python -m pip install --upgrade pip
-          pip install -r engram-semantic-memory/requirements-docs.txt
+          pip install -r requirements-docs.txt
       - name: Build site
-        working-directory: engram-semantic-memory
         run: mkdocs build --strict
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: engram-semantic-memory/site
+          path: site
 
   deploy:
     needs: build
