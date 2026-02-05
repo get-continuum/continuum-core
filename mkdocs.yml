@@ -1,0 +1,47 @@
+site_name: Continuum API & SDK Docs
+site_description: API + SDK documentation for Continuum (Engram Semantic Memory Core)
+repo_url: https://github.com/your-org/your-repo
+edit_uri: edit/main/engram-semantic-memory/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - sdk/src
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Concepts:
+      - Metrics: concepts/metrics.md
+      - Events: concepts/events.md
+      - Overlays: concepts/overlays.md
+      - Memory (Aliases): concepts/memory.md
+      - Contracts: concepts/contracts.md
+  - Auth + Tenancy: auth-tenancy.md
+  - API:
+      - Overview: api/overview.md
+      - Reference (OpenAPI): api/reference.md
+      - Examples: api/examples.md
+  - SDK:
+      - Python: sdk/python.md
+      - Reference: sdk/reference.md
+  - Demo script: demos/continuum-demo.md
+

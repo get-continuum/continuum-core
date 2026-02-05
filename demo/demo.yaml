@@ -1,0 +1,175 @@
+# Engram Semantic Memory Core demo dataset
+workspace_id: default
+base_url: "http://127.0.0.1:8000"
+
+metrics:
+  - metric_id: revenue
+    canonical_name: Revenue
+    description: Net revenue excluding refunds
+
+    aliases:
+      - source_system: dbt
+        source_locator: "models/metrics.yml::revenue"
+        alias_name: "revenue"
+        confidence: 0.9
+
+      - source_system: looker
+        source_locator: "looker://view/orders/measure/revenue"
+        alias_name: "Revenue"
+        confidence: 0.7
+
+    events:
+      - event_type: snapshot
+        source_system: dbt
+        source_ref:
+          commit: "demo-commit-1"
+          path: "models/metrics.yml"
+        reason: "initial import"
+        actor: "demo_loader"
+        snapshot:
+          metric_id: revenue
+          definition:
+            display: Net revenue excluding refunds
+            logic:
+              type: sum
+              field: net_revenue
+              filters:
+                - field: is_refund
+                  op: "="
+                  value: false
+          grain: day
+          dimensions: [country, channel]
+          units: usd
+          meta:
+            source_hint: dbt
+            tags: [finance, pnl]
+
+      - event_type: dimensions_changed
+        source_system: dbt
+        source_ref:
+          commit: "demo-commit-2"
+          path: "models/metrics.yml"
+        reason: "add campaign dimension"
+        actor: "demo_loader"
+        snapshot:
+          metric_id: revenue
+          definition:
+            display: Net revenue excluding refunds
+            logic:
+              type: sum
+              field: net_revenue
+              filters:
+                - field: is_refund
+                  op: "="
+                  value: false
+          grain: day
+          dimensions: [country, channel, campaign]
+          units: usd
+          meta:
+            source_hint: dbt
+            tags: [finance, pnl]
+
+    overlays:
+      # Marketing weekly view
+      - selector: {team: marketing, use_case: weekly_performance}
+        priority: 10
+        overlay_patch:
+          grain: week
+          definition:
+            display: Net revenue (marketing weekly)
+          dimensions: [channel, campaign]
+        author: demo_loader
+        reason: "marketing weekly default"
+
+      # Finance view tweaks (more conservative)
+      - selector: {team: finance}
+        priority: 5
+        overlay_patch:
+          definition:
+            display: Net revenue (finance view)
+        author: demo_loader
+        reason: "finance naming convention"
+
+    resolves:
+      - label: marketing_weekly
+        context: {team: marketing, use_case: weekly_performance}
+      - label: finance
+        context: {team: finance}
+
+  - metric_id: marketing_metrics.attributed_revenue_usd
+    canonical_name: Attributed Revenue (USD)
+    description: Attributed revenue in USD based on paid marketing touchpoints.
+
+    aliases:
+      - source_system: demo
+        source_locator: "demo::marketing_attributed_revenue_usd"
+        alias_name: "revenue by campaign"
+        confidence: 0.9
+
+      - source_system: demo
+        source_locator: "demo::marketing_revenue"
+        alias_name: "revenue"
+        confidence: 0.6
+
+    events:
+      - event_type: snapshot
+        source_system: demo
+        source_ref:
+          path: "demo/marketing_metrics.yaml"
+        reason: "demo seed"
+        actor: "demo_loader"
+        snapshot:
+          metric_id: marketing_metrics.attributed_revenue_usd
+          definition:
+            display: Attributed revenue (marketing)
+            logic:
+              type: sum
+              field: attributed_revenue_usd
+          grain: day
+          dimensions: [country, channel, campaign]
+          units: usd
+          meta:
+            tags: [marketing, attribution]
+
+    overlays: []
+
+    resolves:
+      - label: marketing_default
+        context: {team: marketing}
+
+  - metric_id: finance_metrics.recognized_revenue_usd
+    canonical_name: Recognized Revenue (USD)
+    description: Recognized revenue in USD for finance reporting.
+
+    aliases:
+      - source_system: demo
+        source_locator: "demo::finance_recognized_revenue_usd"
+        alias_name: "revenue"
+        confidence: 0.8
+
+    events:
+      - event_type: snapshot
+        source_system: demo
+        source_ref:
+          path: "demo/finance_metrics.yaml"
+        reason: "demo seed"
+        actor: "demo_loader"
+        snapshot:
+          metric_id: finance_metrics.recognized_revenue_usd
+          definition:
+            display: Recognized revenue (finance)
+            logic:
+              type: sum
+              field: recognized_revenue_usd
+          grain: day
+          dimensions: [region, product, revenue_type]
+          units: usd
+          meta:
+            tags: [finance, revenue]
+
+    overlays: []
+
+    resolves:
+      - label: finance_default
+        context: {team: finance}
+

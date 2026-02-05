@@ -1,0 +1,50 @@
+semantic_models:
+- name: finance_metrics
+  description: Finance reporting metrics for recognized revenue and related ledger activity.
+  model: ref('finance_revenue_ledger')
+  defaults:
+    agg_time_dimension: recognized_date
+  entities:
+  - name: revenue_event
+    type: primary
+    expr: revenue_event_id
+  - name: customer
+    type: foreign
+    expr: customer_id
+  dimensions:
+  - name: recognized_date
+    type: time
+    type_params:
+      time_granularity: day
+  - name: region
+    type: categorical
+  - name: product
+    type: categorical
+  - name: revenue_type
+    type: categorical
+  - name: currency
+    type: categorical
+  - name: contract_term
+    type: categorical
+  measures:
+  - name: recognized_revenue_usd
+    description: Recognized revenue in USD for finance reporting.
+    agg: sum
+    create_metric: true
+  - name: recognized_revenue
+    description: Recognized revenue in local currency for finance reporting.
+    agg: sum
+    create_metric: true
+  - name: deferred_revenue_usd
+    description: Deferred revenue balance movement in USD.
+    agg: sum
+    create_metric: true
+  - name: refunds_usd
+    description: Refunds applied against recognized revenue in USD.
+    agg: sum
+    create_metric: true
+  - name: count_revenue_event
+    agg: count
+    create_metric: true
+    expr: revenue_event_id
+  primary_entity: revenue_event

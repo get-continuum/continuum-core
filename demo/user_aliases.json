@@ -1,0 +1,7 @@
+[
+  {
+    "term": "show bookings",
+    "context_team": "unknown",
+    "metric_id": "paid_metrics.bookings_value_usd"
+  }
+]

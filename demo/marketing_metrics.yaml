@@ -1,0 +1,53 @@
+semantic_models:
+- name: marketing_metrics
+  description: Paid marketing attribution metrics for campaigns, channels, and platforms.
+  model: ref('marketing_attribution')
+  defaults:
+    agg_time_dimension: date
+  entities:
+  - name: marketing_event
+    type: primary
+    expr: marketing_event_id
+  dimensions:
+  - name: date
+    type: time
+    type_params:
+      time_granularity: day
+  - name: country
+    type: categorical
+  - name: channel
+    type: categorical
+  - name: campaign
+    type: categorical
+  - name: product
+    type: categorical
+  - name: platform
+    type: categorical
+  - name: attribution_model
+    type: categorical
+  measures:
+  - name: attributed_revenue_usd
+    description: Attributed revenue in USD based on paid marketing touchpoints.
+    agg: sum
+    create_metric: true
+  - name: attributed_revenue
+    description: Attributed revenue in local currency based on paid marketing touchpoints.
+    agg: sum
+    create_metric: true
+  - name: ad_spend_usd
+    description: Paid media spend in USD.
+    agg: sum
+    create_metric: true
+  - name: clicks
+    description: Total number of paid clicks.
+    agg: sum
+    create_metric: true
+  - name: impressions
+    description: Total number of paid impressions.
+    agg: sum
+    create_metric: true
+  - name: count_marketing_event
+    agg: count
+    create_metric: true
+    expr: marketing_event_id
+  primary_entity: marketing_event

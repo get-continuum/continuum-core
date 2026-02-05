@@ -1,0 +1,148 @@
+semantic_models:
+- name: booking_transactions
+  description: Table used to store all self serve booking transactions
+  model: ref('booking_transactions')
+  defaults:
+    agg_time_dimension: created_ts_pst
+  entities:
+  - name: transaction
+    type: primary
+    expr: transaction_id
+  - name: user
+    type: foreign
+    expr: user_id
+  - name: subscription
+    type: foreign
+    expr: subscription_id
+  - name: package
+    type: foreign
+    expr: package_id
+  dimensions:
+  - name: data_source
+    description: Indicates if the transaction is coming from smbilling (legacy), wufoo
+      billing(wufoo) or stripe
+    type: categorical
+  - name: partner_name
+    type: categorical
+  - name: type
+    expr: transaction_type
+    type: categorical
+  - name: status
+    expr: transaction_status
+    type: categorical
+  - name: line_type
+    type: categorical
+  - name: effective_start_ts_pst
+    expr: transaction_effective_start_ts_pst
+    type: time
+    type_params:
+      time_granularity: day
+  - name: effective_end_ts_pst
+    expr: transaction_effective_end_ts_pst
+    type: time
+    type_params:
+      time_granularity: day
+  - name: subscription_status
+    type: categorical
+  - name: package_name
+    type: categorical
+  - name: package_group
+    type: categorical
+  - name: package_type
+    type: categorical
+  - name: plan_term_type
+    type: categorical
+  - name: company
+    type: categorical
+  - name: domain
+    type: categorical
+  - name: billing_term_version
+    type: categorical
+  - name: subsidiary
+    type: categorical
+  - name: currency
+    expr: transaction_currency
+    type: categorical
+  - name: sku_name
+    type: categorical
+  - name: sku_type_name
+    type: categorical
+  - name: product
+    type: categorical
+  - name: auto_renew
+    type: categorical
+  - name: billing_reason
+    type: categorical
+  - name: collection_method
+    type: categorical
+  - name: billing_country
+    type: categorical
+  - name: geo_group
+    type: categorical
+  - name: sales_channel
+    type: categorical
+  - name: payment_method_type
+    type: categorical
+  measures:
+  - name: sku_cost
+    agg: sum
+    create_metric: true
+  - name: transaction_quantity
+    agg: sum
+    create_metric: true
+  - name: bookings_amount
+    agg: sum
+    create_metric: true
+  - name: bookings_amount_usd
+    agg: sum
+    create_metric: true
+  - name: tax_amount
+    agg: sum
+    create_metric: true
+  - name: tax_amount_usd
+    agg: sum
+    create_metric: true
+  - name: amount_including_tax
+    agg: sum
+    create_metric: true
+  - name: amount_including_tax_usd
+    agg: sum
+    create_metric: true
+  - name: discount_amount
+    agg: sum
+    create_metric: true
+  - name: discount_amount_usd
+    agg: sum
+    create_metric: true
+  - name: total_before_discount
+    agg: sum
+    create_metric: true
+  - name: unit_amount
+    agg: sum
+    create_metric: true
+  - name: unit_amount_usd
+    agg: sum
+    create_metric: true
+  - name: unit_amount_including_tax
+    agg: sum
+    create_metric: true
+  - name: unit_amount_including_tax_usd
+    agg: sum
+    create_metric: true
+  - name: count_transaction
+    agg: count
+    create_metric: true
+    expr: transaction_id
+  - name: count_user
+    agg: count_distinct
+    create_metric: true
+    expr: user_id
+  - name: count_subscription
+    agg: count_distinct
+    create_metric: true
+    expr: subscription_id
+  - name: count_package
+    agg: count_distinct
+    create_metric: true
+    expr: package_id
+  primary_entity: transaction

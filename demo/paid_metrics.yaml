@@ -1,0 +1,116 @@
+semantic_models:
+- name: paid_metrics
+  description: A comprehensive view of paid marketing metrics, including inquiries,
+    leads, opportunities, bookings, and spend across various dimensions such as date,
+    country, channel, campaign, product, and platform.
+  model: ref('paid_metrics')
+  defaults:
+    agg_time_dimension: date
+  entities:
+  - name: pma_key
+    type: primary
+    expr: pma_key
+  dimensions:
+  - name: date
+    type: time
+    type_params:
+      time_granularity: day
+  - name: day_of_month
+    type: categorical
+  - name: month
+    type: categorical
+  - name: year
+    type: categorical
+  - name: country
+    type: categorical
+  - name: country_tier
+    type: categorical
+  - name: channel
+    type: categorical
+  - name: channel_group
+    type: categorical
+  - name: channel_category
+    type: categorical
+  - name: campaign
+    type: categorical
+  - name: product
+    type: categorical
+  - name: funnel_stage
+    type: categorical
+  - name: platform
+    type: categorical
+  - name: pipeline_type
+    type: categorical
+  measures:
+  - name: inquiries
+    description: The number of inquiries.
+    agg: sum
+    create_metric: true
+  - name: mql
+    description: Marketing Qualified Leads.
+    agg: sum
+    create_metric: true
+  - name: sql
+    description: Sales Qualified Leads.
+    agg: sum
+    create_metric: true
+  - name: dql
+    description: Disqualified Leads.
+    agg: sum
+    create_metric: true
+  - name: qualified_opportunity
+    description: Qualified Opportunities.
+    agg: sum
+    create_metric: true
+  - name: pipeline
+    description: Pipeline Value.
+    agg: sum
+    create_metric: true
+  - name: bookings_value_usd
+    description: Booking value in USD.
+    agg: sum
+    create_metric: true
+  - name: bookings_lost_value_usd
+    description: Lost booking value in USD.
+    agg: sum
+    create_metric: true
+  - name: number_of_opportunities_won
+    description: Number of opportunities won.
+    agg: sum
+    create_metric: true
+  - name: number_of_opportunities_closed
+    description: Number of opportunities closed.
+    agg: sum
+    create_metric: true
+  - name: new_paid_bookings_usd
+    description: New paid bookings in USD.
+    agg: sum
+    create_metric: true
+  - name: free_sign_ups
+    description: Number of free sign-ups.
+    agg: sum
+    create_metric: true
+  - name: new_paid_accounts
+    description: Number of new paid accounts.
+    agg: sum
+    create_metric: true
+  - name: spend
+    description: Total spend in USD.
+    agg: sum
+    create_metric: true
+  - name: cost_per_paid_signup
+    description: Cost per paid signup.
+    agg: sum
+    create_metric: true
+  - name: clicks
+    description: Total number of clicks.
+    agg: sum
+    create_metric: true
+  - name: impressions
+    description: Total number of impressions.
+    agg: sum
+    create_metric: true
+  - name: count_pma_key
+    agg: count
+    create_metric: true
+    expr: pma_key

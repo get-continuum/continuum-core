@@ -1,0 +1,1 @@
+{"metrics": {"metric.dbt_revenue": {"name": "dbt_revenue", "label": "DBT Revenue", "description": "Total revenue from dbt manifest", "meta": {"team": "finance"}}}}
