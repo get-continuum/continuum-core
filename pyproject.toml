@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "continuum-engine"
+version = "0.1.0"
+description = "Private engine implementations for Continuum decision framework"
+requires-python = ">=3.10"
+license = {text = "BSL-1.1"}
+dependencies = [
+    "continuum-sdk>=0.1.0",
+    "openai>=1.0",
+    "anthropic>=0.20",
+    "pydantic>=2.0,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "ruff",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
